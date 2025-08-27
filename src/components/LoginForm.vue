@@ -39,11 +39,13 @@
 <script setup>
 // Our logic will go here
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import usersData from '@/assets/json/users.json'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import ColumnGroup from 'primevue/columngroup' // optional
 import Row from 'primevue/row' // optional
-
+const router = useRouter()
 const formData = ref({
   email: '',
   password: ''
@@ -55,10 +57,23 @@ const submitForm = () => {
   validateEmail(true)
   validatePassword(true)
   if (!errors.value.email && !errors.value.password) {
-    submittedCards.value.push({
-      ...formData.value
-    })
-    clearForm()
+    const user = usersData.find(u => 
+      u.email === formData.value.email && 
+      u.password === formData.value.password
+    )
+    if (user) {
+      localStorage.setItem('currentUser', JSON.stringify(user))
+      const loginRecord = {
+          user: user,
+          loginTime: new Date().toISOString(),
+          isLoggedIn: true
+        }
+        localStorage.setItem('loginStatus', JSON.stringify(loginRecord))
+      router.push('/home')
+      clearForm()
+    } else {
+      errors.value.email = 'Invalid email or password'
+    }
   }
 }
 

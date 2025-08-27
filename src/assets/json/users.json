@@ -1,0 +1,29 @@
+[
+  {
+    "Document ID": 1,
+    "username": "Jane Austen",
+    "email": "join@jo.in",
+    "rating": 5,
+    "role": "admin",
+    "password": "Join@jo.1",
+    "createdAt": "2025-08-20T09:34:13.997Z"
+  },
+  {
+    "Document ID": 2,
+    "username": "Alon",
+    "email": "s@student.monash",
+    "rating": 3,
+    "role": "admin",
+    "password": "Student1@",
+    "createdAt": "2025-08-20T15:41:29.474Z"
+  },
+  {
+    "Document ID": 3,
+    "username": "Student",
+    "email": "student@st.en",
+    "rating": 4.2,
+    "role": "user",
+    "password": "Student1@",
+    "createdAt": "2025-08-20T07:34:20.377Z"
+  }
+]

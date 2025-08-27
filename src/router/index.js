@@ -7,6 +7,7 @@ import ActiveView from '@/views/ActiveView.vue'
 import AiView from '@/views/AiView.vue'
 import MapView from '@/views/MapView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import DashboardView from '@/views/DashboardView.vue'
 
 const routes = [
   {
@@ -47,7 +48,12 @@ const routes = [
     path: '/about',
     name: 'About',
     component: AboutView
-  }
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: DashboardView
+  },
 ]
 
 const router = createRouter({
