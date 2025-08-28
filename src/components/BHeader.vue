@@ -6,16 +6,16 @@
       <ul class="nav nav-pills">
         <li class="nav-item">
           <router-link to="/home" class="nav-link" active-class="active" aria-current="page"
-            >Home (Week 5)</router-link
+            >Home</router-link
           >
         </li>
         
         <li class="nav-item">
           <router-link to="/active" class="nav-link" active-class="active">Active</router-link>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <router-link to="/ai" class="nav-link" active-class="active">Ai</router-link>
-        </li>
+        </li> -->
         <li class="nav-item">
           <router-link to="/map" class="nav-link" active-class="active">Map</router-link>
         </li>

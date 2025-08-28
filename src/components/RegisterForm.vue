@@ -1,7 +1,11 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import usersData from '@/assets/json/users.json'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
+
+const router = useRouter()
 
 const formData = ref({
   username: '',
@@ -13,13 +17,42 @@ const formData = ref({
 
 const submittedCards = ref([])
 
-const submitForm = () => {
+const submitForm = async() => {
   validateName(true)
   validateEmail(true)
   validatePassword(true)
   validateConfirmPassword(true)
   if (!errors.value.username && !errors.value.email && !errors.value.password && !errors.value.confirmPassword) {
-    submittedCards.value.push({ ...formData.value })
+    const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]')
+    const allUsers = [...usersData, ...existingUsers]
+
+    const existingUser = allUsers.find(u => u.email === formData.value.email)
+    if (existingUser) {
+      errors.value.email = 'Email already exists'
+      return
+    }
+    const newUser = {
+      "Document ID": allUsers.length + 1,
+      "username": formData.value.username,
+      "email": formData.value.email,
+      "rating": 5,
+      "role": formData.value.role,
+      "password": formData.value.password,
+      "createdAt": new Date().toISOString()
+    }
+
+    existingUsers.push(newUser)
+    localStorage.setItem('registeredUsers', JSON.stringify(existingUsers))
+    localStorage.setItem('currentUser', JSON.stringify(newUser))
+
+    const loginRecord = {
+      user: newUser,
+      loginTime: new Date().toISOString(),
+      isLoggedIn: true
+    }
+    localStorage.setItem('loginStatus', JSON.stringify(loginRecord))
+
+    await router.push('/home')
     clearForm()
   }
 }
