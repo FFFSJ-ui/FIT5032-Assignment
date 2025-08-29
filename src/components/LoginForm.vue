@@ -94,7 +94,7 @@ const validateEmail = (blur) => {
   if (formData.value.email.length < 5) {
     if (blur) errors.value.email = 'Email must be at least 5 characters'
   } else if (!/^[A-Za-z0-9]+@[A-Za-z0-9]+\.[A-Za-z0-9]+$/.test(email)) {
-    if (blur) errors.value.email = 'Email must be in the correct format'
+    if (blur) errors.value.email = 'Email must be in the correct format (xxx@xx.xxx)'
     return
   } else {
     errors.value.email = null

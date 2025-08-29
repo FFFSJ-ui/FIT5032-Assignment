@@ -206,7 +206,7 @@ const validateReason = () => {
     </div>
   </div>
 
-  <div class="row mt-5">
+  <!-- <div class="row mt-5">
     <h4>This is a Primevue Datatable.</h4>
     <DataTable :value="submittedCards" tableStyle="min-width: 50rem">
       <Column field="username" header="Username"></Column>
@@ -237,7 +237,7 @@ const validateReason = () => {
         </ul>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <style>

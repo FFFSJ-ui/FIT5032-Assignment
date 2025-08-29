@@ -59,7 +59,7 @@ const validateContent = (blur) => {
   if (formData.value.content.length > 500) {
     if (blur) errors.value.content = 'Content must be within 500 characters'
   } else if (!/^[a-zA-Z0-9\s.,!?'"():;@#%&*\-+=/_]*$/.test(content)) {
-    if (blur) errors.value.content = 'Invalid content'
+    if (blur) errors.value.content = 'Content must be letters, numbers, spaces or common punctuation marks'
   } else {
     errors.value.content = null
   }
