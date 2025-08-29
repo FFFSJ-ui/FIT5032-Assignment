@@ -47,8 +47,11 @@ const errors = ref({
 })
 
 const validateTitle = (blur) => {
+  const title = formData.value.title
   if (formData.value.title.length < 3 || formData.value.title.length > 100) {
     if (blur) errors.value.title = 'Title must be 3 - 100 characters'
+  } else if (!/^[a-zA-Z0-9\s.,!?'"():;@#%&*\-+=/_]*$/.test(title)) {
+    if (blur) errors.value.content = 'Title must be letters, numbers, spaces or common punctuation marks'
   } else {
     errors.value.title = null
   }
@@ -74,8 +77,11 @@ const validateTime = (blur) => {
 }
 
 const validateLocation = (blur) => {
+  const location = formData.value.location
   if (formData.value.location.length < 2) {
     if (blur) errors.value.location = 'Location must be at least 2 characters'
+  } else if (!/^[a-zA-Z0-9\s.,!?'"():;@#%&*\-+=/_]*$/.test(location)) {
+    if (blur) errors.value.content = 'Location must be letters, numbers, spaces or common punctuation marks'
   } else {
     errors.value.location = null
   }

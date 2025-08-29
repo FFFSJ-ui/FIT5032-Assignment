@@ -110,7 +110,7 @@ const validateReason = () => {
 <template>
   <!-- 🗄️ W3. Library Registration Form -->
   <div class="container mt-5">
-    <div class="row">
+    <!-- <div class="row">
       <div class="col-md-8 offset-md-2">
         <h1 class="text-center">🗄️ W5. Library Registration Form</h1>
         <p class="text-center">
@@ -206,7 +206,7 @@ const validateReason = () => {
     </div>
   </div>
 
-  <!-- <div class="row mt-5">
+  <div class="row mt-5">
     <h4>This is a Primevue Datatable.</h4>
     <DataTable :value="submittedCards" tableStyle="min-width: 50rem">
       <Column field="username" header="Username"></Column>
@@ -236,8 +236,8 @@ const validateReason = () => {
           <li class="list-group-item">Reason: {{ card.reason }}</li>
         </ul>
       </div>
-    </div>
-  </div> -->
+    </div> -->
+  </div>
 </template>
 
 <style>
