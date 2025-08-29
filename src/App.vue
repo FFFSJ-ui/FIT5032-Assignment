@@ -7,15 +7,15 @@ const route = useRoute()
 
 <template>
   <div class="main-container">
-  <header v-if="route.path !== '/first'">
-    <BHeader />
-  </header>
+    <header v-if="route.path !== '/first'">
+      <BHeader />
+    </header>
 
-  <main class="main-box">
-    <!-- <LibraryRegistrationForm /> -->
-    <!-- <JSONLab /> -->
-     <router-view></router-view>
-  </main>
+    <main class="main-box">
+      <!-- <LibraryRegistrationForm /> -->
+      <!-- <JSONLab /> -->
+      <router-view></router-view>
+    </main>
   </div>
 </template>
 
@@ -47,13 +47,16 @@ const route = useRoute()
   }
 } */
 
+.main-container {
+  padding-top: 30px;
+}
+
 .container {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 80vw;
+
   margin: 0 auto;
   padding: 20px;
   /* background-color: #e0bfbf; */
   border-radius: 10px;
 }
-
 </style>

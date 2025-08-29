@@ -2,13 +2,14 @@
 import { ref } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
-import DatePicker from 'primevue/datepicker'
+import DatePicker from 'primevue/calendar'
+import UsersTable from '@/components/UsersTable.vue'
 
 const formData = ref({
   title: '',
   content: '',
   time: '',
-  location: ''
+  location: '',
 })
 
 const submittedCards = ref([])
@@ -18,7 +19,12 @@ const submitForm = () => {
   validateContent(true)
   validateTime(true)
   validateLocation(true)
-  if (!errors.value.title && !errors.value.content && !errors.value.time && !errors.value.location) {
+  if (
+    !errors.value.title &&
+    !errors.value.content &&
+    !errors.value.time &&
+    !errors.value.location
+  ) {
     submittedCards.value.push({ ...formData.value })
     clearForm()
   }
@@ -29,7 +35,7 @@ const clearForm = () => {
     title: '',
     content: '',
     time: '',
-    location: ''
+    location: '',
   }
 }
 
@@ -37,9 +43,8 @@ const errors = ref({
   title: null,
   content: null,
   time: null,
-  location: null
+  location: null,
 })
-
 
 const validateTitle = (blur) => {
   if (formData.value.title.length < 3 || formData.value.title.length > 100) {
@@ -75,139 +80,101 @@ const validateLocation = (blur) => {
     errors.value.location = null
   }
 }
-
-
 </script>
 
 <template>
   <!-- 🗄️ W3. Library Registration Form -->
-  <div class="container mt-5">
-    <div class="row">
-      <div class="col-md-8 offset-md-2">
-        <h1 class="text-center">🗄️ Active Management</h1>
-        <form @submit.prevent="submitForm">
-          <div class="row mb-3">
-            <div class="col-md-6 col-sm-6">
-              <label for="title" class="form-label">Title</label>
-              <input
-                type="text"
-                class="form-control"
-                id="title"
-                @blur="() => validateTitle(true)"
-                @input="() => validateTitle(false)"
-                v-model="formData.title"
-              />
-              <div v-if="errors.title" class="text-danger">{{ errors.title }}</div>
-            </div>
-            <div class="col-md-6 col-sm-6">
-              <label for="time" class="form-label">Time</label>
-              <DatePicker 
-                id="datepicker-24h" 
-                v-model="formData.time" 
-                showTime 
-                hourFormat="24" 
-                fluid 
-                :editable="false"
-                @blur="() => validateTime(true)"
-                @input="() => validateTime(false)"
-              />
-              <div v-if="errors.time" class="text-danger">{{ errors.time }}</div>
-            </div>
-            <div class="col-md-6 col-sm-6">
-              <label for="location" class="form-label">Location</label>
-              <input
-                type="text"
-                class="form-control"
-                id="location"
-                @blur="() => validateLocation(true)"
-                @input="() => validateLocation(false)"
-                v-model="formData.location"
-              />
-              <div v-if="errors.location" class="text-danger">{{ errors.location }}</div>
-            </div>
-            <div class="col-md-6 col-sm-6">
-              <label for="content" class="form-label">Content</label>
-            <textarea
-              class="form-control"
-              id="content"
-              rows="3"
-              v-model="formData.content"
-              @blur="() => validateContent(true)"
-              @input="() => validateContent(false)"
-            ></textarea>
-            <div v-if="errors.content" class="text-danger">{{ errors.content }}</div>
-          </div>
-          </div>
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary me-2">Submit</button>
-            <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button>
-          </div>
-        </form>
+  <div class="form-container mt-5">
+    <h1 class="text-center">🗄️ Active Management</h1>
+    <form @submit.prevent="submitForm">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          @blur="() => validateTitle(true)"
+          @input="() => validateTitle(false)"
+          v-model="formData.title"
+        />
+        <div v-if="errors.title" class="text-danger">{{ errors.title }}</div>
+        <div class="mb-3">
+          <label for="time" class="form-label">Time</label>
+          <DatePicker
+            id="datepicker-24h"
+            v-model="formData.time"
+            showTime
+            hourFormat="24"
+            fluid
+            :editable="false"
+            @blur="() => validateTime(true)"
+            @input="() => validateTime(false)"
+            @date-select="() => validateTime(false)"
+          />
+          <div v-if="errors.time" class="text-danger">{{ errors.time }}</div>
+        </div>
+        <div class="mb-3">
+          <label for="location" class="form-label">Location</label>
+          <input
+            type="text"
+            class="form-control"
+            id="location"
+            @blur="() => validateLocation(true)"
+            @input="() => validateLocation(false)"
+            v-model="formData.location"
+          />
+          <div v-if="errors.location" class="text-danger">{{ errors.location }}</div>
+        </div>
+        <div class="mb-3">
+          <label for="content" class="form-label">Content</label>
+          <textarea
+            class="form-control"
+            id="content"
+            rows="3"
+            v-model="formData.content"
+            @blur="() => validateContent(true)"
+            @input="() => validateContent(false)"
+          ></textarea>
+          <div v-if="errors.content" class="text-danger">{{ errors.content }}</div>
+        </div>
       </div>
-    </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary me-2">Submit</button>
+        <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button>
+      </div>
+    </form>
   </div>
 
-  <div class="row mt-5">
-    <div class="col-md-8 offset-md-2">
+  <div class="container mt-5">
     <DataTable :value="submittedCards" tableStyle="min-width: 50rem">
       <Column field="title" header="Title"></Column>
       <Column field="content" header="Content"></Column>
       <Column field="time" header="Time"></Column>
       <Column field="location" header="Location"></Column>
     </DataTable>
-    </div>
   </div>
-
-  <div class="row mt-5" v-if="submittedCards.length">
-    <div class="d-flex flex-wrap justify-content-start">
-      <div
-        v-for="(card, index) in submittedCards"
-        :key="index"
-        class="card m-2"
-        style="width: 18rem"
-      >
-        <div class="card-header">User Information</div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">Title: {{ card.title }}</li>
-          <li class="list-group-item">Content: {{ card.content }}</li>
-          <li class="list-group-item">Time: {{ card.time }}</li>
-          <li class="list-group-item">Location: {{ card.location }}</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+  <UsersTable />
 </template>
 
 <style>
-.container {
+.form-container {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 80vw;
+  width: 90%;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
   /* background-color: #e0bfbf; */
   border-radius: 10px;
 }
 
-/* Class selectors */
-.form {
-  text-align: center;
-  margin-top: 50px;
-}
-
 /* ID selectors */
 #title:focus,
 #content:focus,
 #time:focus,
-#location:focus{
+#location:focus {
   border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.card-header {
-  background-color: #275fda;
-  color: white;
-  padding: 10px;
-  border-radius: 10px 10px 0 0;
 }
 
 /* DataTable */

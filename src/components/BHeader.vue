@@ -1,71 +1,142 @@
 <template>
-  <!-- Using Bootstrap's Header template (starter code) -->
-  <!-- https://getbootstrap.com/docs/5.0/examples/headers/ -->
-  <div class="container">
-    <header class="d-flex justify-content-center py-3">
-      <ul class="nav nav-pills">
-        <li class="nav-item">
-          <router-link to="/home" class="nav-link" active-class="active" aria-current="page"
-            >Home</router-link
-          >
-        </li>
-        
-        <li class="nav-item">
-          <router-link to="/active" class="nav-link" active-class="active">Active</router-link>
-        </li>
-        <!-- <li class="nav-item">
-          <router-link to="/ai" class="nav-link" active-class="active">Ai</router-link>
-        </li> -->
-        <li class="nav-item">
-          <router-link to="/map" class="nav-link" active-class="active">Map</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/profile" class="nav-link" active-class="active">Profile</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/about" class="nav-link" active-class="active">About</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/dashboard" class="nav-link" active-class="active">Dashboard</router-link>
-        </li>
-      </ul>
-    </header>
-  </div>
+  <nav class="navbar navbar-expand-lg text-white fixed-top">
+    <div class="container-fluid">
+      <h5 class="offcanvas-title">NutriPublic</h5>
+      <!-- sidebar button -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasNavbar"
+        aria-controls="offcanvasNavbar"
+      >
+        <span class="navbar-toggler-icon navbar-dark"></span>
+      </button>
+      <!-- sidebar -->
+      <div
+        class="offcanvas offcanvas-end"
+        tabindex="-1"
+        id="offcanvasNavbar"
+        aria-labelledby="offcanvasNavbarLabel"
+      >
+        <div class="offcanvas-header border-0">
+          <h5 class="offcanvas-title">NutriPublic</h5>
+          <!-- close button -->
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="offcanvas"
+          ></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav justify-content-lg-center flex-grow-1 pe-3">
+            <li class="nav-item">
+              <router-link to="/home" class="nav-link" active-class="active" @click="closeOffcanvas"
+                >Home</router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/active"
+                class="nav-link"
+                active-class="active"
+                @click="closeOffcanvas"
+                >Active</router-link
+              >
+            </li>
+            <!-- <li class="nav-item">
+              <router-link to="/ai" class="nav-link" active-class="active" @click="closeOffcanvas"
+                >AI</router-link
+              >
+            </li> -->
+            <li class="nav-item">
+              <router-link to="/map" class="nav-link" active-class="active" @click="closeOffcanvas"
+                >Map</router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/profile"
+                class="nav-link"
+                active-class="active"
+                @click="closeOffcanvas"
+                >Profile</router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/about"
+                class="nav-link"
+                active-class="active"
+                @click="closeOffcanvas"
+                >About</router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link
+                to="/dashboard"
+                class="nav-link"
+                active-class="active"
+                @click="closeOffcanvas"
+                >Dashboard</router-link
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
 </template>
 
+<script>
+export default {
+  name: 'BHeader',
+  mounted() {
+    this.$nextTick(() => {
+      import('bootstrap/dist/js/bootstrap.bundle.min.js')
+    })
+  },
+  methods: {
+    closeOffcanvas() {
+      const offcanvasElement = document.getElementById('offcanvasNavbar')
+      if (offcanvasElement) {
+        const offcanvas = window.bootstrap?.Offcanvas?.getInstance(offcanvasElement)
+        if (offcanvas) {
+          offcanvas.hide()
+        }
+      }
+    },
+  },
+}
+</script>
+
 <style scoped>
-.b-example-divider {
-  height: 3rem;
-  background-color: rgba(0, 0, 0, 0.1);
-  border: solid rgba(0, 0, 0, 0.15);
-  border-width: 1px 0;
-  box-shadow:
-    inset 0 0.5em 1.5em rgba(0, 0, 0, 0.1),
-    inset 0 0.125em 0.5em rgba(0, 0, 0, 0.15);
+/* fixed navigation bar height and background */
+.navbar {
+  height: 70px;
+  background-color: #274754 !important;
+}
+/* collapse button focused style */
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+/* sidebar */
+.offcanvas {
+  background-color: #274754 !important;
+  color: #e7f5ec;
 }
 
-.form-control-dark {
-  color: #fff;
-  background-color: var(--bs-dark);
-  border-color: var(--bs-gray);
+.offcanvas-body .nav-link {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.25rem;
+  border-radius: 0.375rem;
+  color: #e7f5ec !important;
 }
-.form-control-dark:focus {
-  color: #fff;
-  background-color: var(--bs-dark);
-  border-color: #fff;
-  box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25);
-}
-
-.bi {
-  vertical-align: -0.125em;
-  fill: currentColor;
+/* navigation link of the activated page */
+.offcanvas-body .nav-link.active {
+  background-color: #e7f5ec;
+  color: #274754 !important;
 }
 
-.text-small {
-  font-size: 85%;
-}
-
-.dropdown-toggle {
-  outline: 0;
-}
+/* button color: #16a249 */
 </style>
