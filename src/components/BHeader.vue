@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg text-white fixed-top">
+  <nav class="navbar navbar-expand-sm text-white fixed-top">
     <div class="container-fluid">
       <h5 class="offcanvas-title">NutriPublic</h5>
       <!-- sidebar button -->
@@ -29,7 +29,7 @@
           ></button>
         </div>
         <div class="offcanvas-body">
-          <ul class="navbar-nav justify-content-lg-center flex-grow-1 pe-3">
+          <ul class="navbar-nav justify-content-sm-center flex-grow-1 pe-3">
             <li class="nav-item">
               <router-link to="/home" class="nav-link" active-class="active" @click="closeOffcanvas"
                 >Home</router-link
@@ -63,7 +63,7 @@
                 >Profile</router-link
               >
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <router-link
                 to="/about"
                 class="nav-link"
@@ -71,7 +71,7 @@
                 @click="closeOffcanvas"
                 >About</router-link
               >
-            </li>
+            </li> -->
             <li class="nav-item">
               <router-link
                 to="/dashboard"
