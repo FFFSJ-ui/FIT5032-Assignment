@@ -80,7 +80,7 @@ const validateName = (blur) => {
   if (formData.value.username.length < 3) {
     if (blur) errors.value.username = 'Name must be at least 3 characters'
   } else if (!/^[a-zA-Z0-9\s.,!?'"():;@#%&*\-+=/_]*$/.test(name)) {
-    if (blur) errors.value.content = 'Name must be letters, numbers, spaces or common punctuation marks'
+    if (blur) errors.value.username = 'Name must be letters, numbers, spaces or common punctuation marks'
   } else {
     errors.value.username = null
   }
