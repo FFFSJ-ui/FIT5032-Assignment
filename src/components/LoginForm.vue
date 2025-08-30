@@ -57,7 +57,9 @@ const submitForm = () => {
   validateEmail(true)
   validatePassword(true)
   if (!errors.value.email && !errors.value.password) {
-    const user = usersData.find(u => 
+    const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]')
+    const allUsers = [...usersData, ...existingUsers]
+    const user = allUsers.find(u => 
       u.email === formData.value.email && 
       u.password === formData.value.password
     )
