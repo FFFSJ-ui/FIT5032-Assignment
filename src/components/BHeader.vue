@@ -56,7 +56,7 @@
             </li>
             <li class="nav-item">
               <router-link
-                to="/profile"
+                :to="isLoggedIn ? '/profile' : '/first'"
                 class="nav-link"
                 active-class="active"
                 @click="closeOffcanvas"
@@ -82,6 +82,16 @@
               >
             </li>
           </ul>
+          <ul class="navbar-nav ms-auto">
+            <!-- show login button if not logged in -->
+            <li class="nav-item" v-if="!isLoggedIn">
+              <router-link to="/first" class="nav-link" active-class="active" @click="closeOffcanvas">Login</router-link>
+            </li>
+            <!-- show text if logged in -->
+            <li class="nav-item" v-else>
+              <span class="nav-link">Hello, {{ username }}</span>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -89,6 +99,7 @@
 </template>
 
 <script>
+import { isAuthenticated, currentUser } from '@/auth'
 export default {
   name: 'BHeader',
   mounted() {
@@ -96,6 +107,17 @@ export default {
       import('bootstrap/dist/js/bootstrap.bundle.min.js')
     })
   },
+  beforeUnmount() {},
+  computed: {
+    isLoggedIn() {
+      return !!isAuthenticated.value
+    },
+  // display current username
+  username() {
+    const user = currentUser.value
+    return user.username
+  },
+},
   methods: {
     closeOffcanvas() {
       const offcanvasElement = document.getElementById('offcanvasNavbar')

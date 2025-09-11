@@ -40,41 +40,55 @@
 // Our logic will go here
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import usersData from '@/assets/json/users.json'
-import DataTable from 'primevue/datatable'
-import Column from 'primevue/column'
-import ColumnGroup from 'primevue/columngroup' // optional
-import Row from 'primevue/row' // optional
+import db from '@/firebase/init'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { collection, query, where, limit, getDocs } from 'firebase/firestore'
+import { setCurrentUser } from '@/auth'
+
 const router = useRouter()
 const formData = ref({
   email: '',
   password: ''
 })
 
-const submittedCards = ref([])
-
-const submitForm = () => {
+const submitForm = async () => {
   validateEmail(true)
   validatePassword(true)
   if (!errors.value.email && !errors.value.password) {
-    const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]')
-    const allUsers = [...usersData, ...existingUsers]
-    const user = allUsers.find(u => 
-      u.email === formData.value.email && 
-      u.password === formData.value.password
-    )
-    if (user) {
-      localStorage.setItem('currentUser', JSON.stringify(user))
-      const loginRecord = {
-          user: user,
-          loginTime: new Date().toISOString(),
-          isLoggedIn: true
+    try {
+      const auth = getAuth()
+      const credentials = await signInWithEmailAndPassword(
+        auth,
+        formData.value.email,
+        formData.value.password,
+      )
+      const user = credentials.user
+      try {
+        const querySnapshot = await getDocs(query(collection(db, 'users'), where('email', '==', user.email), limit(1)))
+        if (!querySnapshot.empty) {
+          const data = querySnapshot.docs[0].data() || {}
+          setCurrentUser({
+            uid: user.uid,
+            email: user.email,
+            username: data.username,
+            role: data.role,
+          })
+        } else {
+          setCurrentUser({ uid: user.uid, email: user.email })
         }
-        localStorage.setItem('loginStatus', JSON.stringify(loginRecord))
-      router.push('/home')
+      } catch {
+        setCurrentUser({ uid: user.uid, email: user.email })
+      }
+      await router.push('/home')
       clearForm()
-    } else {
-      errors.value.email = 'Invalid email or password'
+    } catch (error) {
+      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        errors.value.email = 'Invalid email or password'
+      } else if (error.code === 'auth/too-many-requests') {
+        errors.value.email = 'Too many requests, please wait a while'
+      } else {
+        errors.value.email = 'Login failed'
+      }
     }
   }
 }

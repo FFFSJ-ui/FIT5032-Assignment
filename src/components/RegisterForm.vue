@@ -1,9 +1,10 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import usersData from '@/assets/json/users.json'
-import DataTable from 'primevue/datatable'
-import Column from 'primevue/column'
+import db from '@/firebase/init'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { setCurrentUser } from '@/auth'
 
 const router = useRouter()
 
@@ -16,44 +17,47 @@ const formData = ref({
 })
 
 const submittedCards = ref([])
+const emailInput = ref(null)
 
 const submitForm = async() => {
+  // clear email verification before submitting
+  if (emailInput.value) {
+    emailInput.value.setCustomValidity('')
+  }
+  errors.value.email = null
+
   validateName(true)
   validateEmail(true)
   validatePassword(true)
   validateConfirmPassword(true)
   if (!errors.value.username && !errors.value.email && !errors.value.password && !errors.value.confirmPassword) {
-    const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]')
-    const allUsers = [...usersData, ...existingUsers]
-
-    const existingUser = allUsers.find(u => u.email === formData.value.email)
-    if (existingUser) {
-      errors.value.email = 'Email already exists'
-      return
+    try {
+      const auth = getAuth()
+      const credentials = await createUserWithEmailAndPassword(
+        auth,
+        formData.value.email,
+        formData.value.password,
+      )
+      const user = credentials.user
+      await addUser()
+      setCurrentUser({ 
+        uid: user.uid, 
+        email: user.email,
+        rating: 5,
+        username: formData.value.username,
+        role: formData.value.role
+      })
+      await router.push('/home')
+      clearForm()
+    } catch (error) {
+      if (error.code === 'auth/email-already-in-use') {
+        errors.value.email = 'Email already in use'
+      } else if (error.code === 'auth/invalid-email') {
+        errors.value.email = 'Invalid email'
+      } else {
+        errors.value.email = error.message || 'Register failed'
+      }
     }
-    const newUser = {
-      "Document ID": allUsers.length + 1,
-      "username": formData.value.username,
-      "email": formData.value.email,
-      "rating": 5,
-      "role": formData.value.role,
-      "password": formData.value.password,
-      "createdAt": new Date().toISOString()
-    }
-
-    existingUsers.push(newUser)
-    localStorage.setItem('registeredUsers', JSON.stringify(existingUsers))
-    localStorage.setItem('currentUser', JSON.stringify(newUser))
-
-    const loginRecord = {
-      user: newUser,
-      loginTime: new Date().toISOString(),
-      isLoggedIn: true
-    }
-    localStorage.setItem('loginStatus', JSON.stringify(loginRecord))
-
-    await router.push('/home')
-    clearForm()
   }
 }
 
@@ -76,7 +80,7 @@ const errors = ref({
 })
 
 const validateName = (blur) => {
-  const name = formData.value.name
+  const name = formData.value.username
   if (formData.value.username.length < 3) {
     if (blur) errors.value.username = 'Name must be at least 3 characters'
   } else if (!/^[a-zA-Z0-9\s.,!?'"():;@#%&*\-+=/_]*$/.test(name)) {
@@ -132,6 +136,16 @@ const validateConfirmPassword = (blur) => {
   }
 }
 
+const addUser = async () => {
+  await addDoc(collection(db, 'users'), {
+      username: formData.value.username,
+      email: formData.value.email,
+      rating: 5,
+      role: formData.value.role,
+      password: formData.value.password,
+      createat: serverTimestamp()
+    })
+}
 </script>
 
 <template>
@@ -161,6 +175,7 @@ const validateConfirmPassword = (blur) => {
               @input="() => validateEmail(false)"
               v-model="formData.email"
             />
+            <div v-if="errors.email" class="text-danger">{{ errors.email }}</div>
             </div>
             <div class="mb-3">
               <label for="role" class="form-label">Role</label>

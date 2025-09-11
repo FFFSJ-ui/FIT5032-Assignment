@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
+import { isAuthenticated, waitInitialization } from '../auth'
 import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import FirstView from '@/views/FirstView.vue'
@@ -12,7 +12,7 @@ import DashboardView from '@/views/DashboardView.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/first'
+    redirect: '/home'
   },
   {
     path: '/first',
@@ -42,7 +42,8 @@ const routes = [
   {
     path: '/profile',
     name: 'Profile',
-    component: ProfileView
+    component: ProfileView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/about',
@@ -52,7 +53,8 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: DashboardView
+    component: DashboardView,
+    meta: { requiresAuth: true },
   },
 ]
 
@@ -61,4 +63,15 @@ const router = createRouter({
   routes
 })
 
-export default router
+router.beforeEach(async(to, from, next) => {
+  await waitInitialization()
+  if (to.meta && to.meta.requiresAuth) {
+    const loggedIn = !!isAuthenticated.value
+    if (!loggedIn) {
+      return next({ path: '/first', query: { redirect: to.fullPath } })
+    }
+  }
+  next()
+})
+
+  export default router
