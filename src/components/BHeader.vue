@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-sm text-white fixed-top">
+  <nav class="navbar navbar-expand-lg text-white fixed-top">
     <div class="container-fluid">
       <h5 class="offcanvas-title">NutriPublic</h5>
       <!-- sidebar button -->
@@ -72,7 +72,7 @@
                 >About</router-link
               >
             </li> -->
-            <li class="nav-item">
+            <li class="nav-item" v-if="isAdmin">
               <router-link
                 to="/dashboard"
                 class="nav-link"
@@ -85,7 +85,13 @@
           <ul class="navbar-nav ms-auto">
             <!-- show login button if not logged in -->
             <li class="nav-item" v-if="!isLoggedIn">
-              <router-link to="/first" class="nav-link" active-class="active" @click="closeOffcanvas">Login</router-link>
+              <router-link
+                to="/first"
+                class="nav-link"
+                active-class="active"
+                @click="closeOffcanvas"
+                >Login</router-link
+              >
             </li>
             <!-- show text if logged in -->
             <li class="nav-item" v-else>
@@ -112,12 +118,17 @@ export default {
     isLoggedIn() {
       return !!isAuthenticated.value
     },
-  // display current username
-  username() {
-    const user = currentUser.value
-    return user.username
+    // display current username
+    username() {
+      const user = currentUser.value
+      return user.username
+    },
+    isAdmin() {
+      const user = currentUser.value
+      return user && user.role === 'admin'
+    },
   },
-},
+
   methods: {
     closeOffcanvas() {
       const offcanvasElement = document.getElementById('offcanvasNavbar')

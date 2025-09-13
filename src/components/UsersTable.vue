@@ -2,21 +2,30 @@
 import { ref, onMounted } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
-import usersData from '@/assets/json/users.json'
+import db from '@/firebase/init'
+import { collection, getDocs } from 'firebase/firestore'
 
 const users = ref([])
 
+const loadUsers = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'users'))
+    users.value = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+    }))
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 onMounted(() => {
-  const jsonUsers = [...usersData]
-  const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]')
-  users.value = [...jsonUsers, ...registeredUsers]
+  loadUsers()
 })
 </script>
 
 <template>
   <div class="container mt-5">
     <DataTable :value="users" tableStyle="min-width: 50rem">
-      <Column field="Document ID" header="Document ID"></Column>
       <Column field="username" header="Username"></Column>
       <Column field="email" header="Email"></Column>
       <Column field="rating" header="Rating"></Column>

@@ -8,6 +8,7 @@ import AiView from '@/views/AiView.vue'
 import MapView from '@/views/MapView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import DashboardView from '@/views/DashboardView.vue'
+import ActiveDetailView from '@/views/ActiveDetailView.vue'
 
 const routes = [
   {
@@ -28,6 +29,11 @@ const routes = [
     path: '/active',
     name: 'Active',
     component: ActiveView
+  },
+  {
+    path: '/active/:id',
+    name: 'ActiveDetail',
+    component: ActiveDetailView
   },
   {
     path: '/ai',
