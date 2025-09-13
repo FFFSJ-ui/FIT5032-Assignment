@@ -30,7 +30,6 @@ onMounted(() => {
       <Column field="email" header="Email"></Column>
       <Column field="rating" header="Rating"></Column>
       <Column field="role" header="Role"></Column>
-      <Column field="password" header="Password"></Column>
     </DataTable>
   </div>
 </template>

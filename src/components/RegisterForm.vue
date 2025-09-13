@@ -142,7 +142,6 @@ const addUser = async () => {
       email: formData.value.email,
       rating: 5,
       role: formData.value.role,
-      password: formData.value.password,
       createat: serverTimestamp()
     })
 }
