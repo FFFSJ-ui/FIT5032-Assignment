@@ -3,12 +3,12 @@ import { isAuthenticated, waitInitialization } from '../auth'
 import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import FirstView from '@/views/FirstView.vue'
-import ActiveView from '@/views/ActiveView.vue'
+import EventView from '@/views/EventView.vue'
 import AiView from '@/views/AiView.vue'
 import MapView from '@/views/MapView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import DashboardView from '@/views/DashboardView.vue'
-import ActiveDetailView from '@/views/ActiveDetailView.vue'
+import EventDetailView from '@/views/EventDetailView.vue'
 
 const routes = [
   {
@@ -26,14 +26,14 @@ const routes = [
     component: HomeView,
   },
   {
-    path: '/active',
-    name: 'Active',
-    component: ActiveView,
+    path: '/event',
+    name: 'Event',
+    component: EventView,
   },
   {
-    path: '/active/:id',
-    name: 'ActiveDetail',
-    component: ActiveDetailView,
+    path: '/event/:id',
+    name: 'EventDetail',
+    component: EventDetailView,
   },
   {
     path: '/ai',

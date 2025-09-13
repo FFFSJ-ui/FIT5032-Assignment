@@ -4,18 +4,18 @@ import router from '@/router'
 import db from '@/firebase/init'
 import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 
-const actives = ref([])
+const events = ref([])
 
-const loadActives = async () => {
-  const querySnapshot = await getDocs(query(collection(db, 'actives'), orderBy('createat', 'desc')))
-  actives.value = querySnapshot.docs.map((doc) => ({
+const loadEvents = async () => {
+  const querySnapshot = await getDocs(query(collection(db, 'events'), orderBy('createat', 'desc')))
+  events.value = querySnapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   }))
 }
 
-const acitveDetail = (active) => {
-  router.push(`/active/${active.id}`)
+const acitveDetail = (event) => {
+  router.push(`/event/${event.id}`)
 }
 
 const formatDate = (date) => {
@@ -27,7 +27,7 @@ const longContent = (content) => {
 }
 
 onMounted(() => {
-  loadActives()
+  loadEvents()
 })
 
 
@@ -35,19 +35,19 @@ onMounted(() => {
 
 <template>
   <div class="form-container mt-5">
-    <h1 class="text-center">Active</h1>
+    <h1 class="text-center">Event</h1>
     <div class="mb-3">
       <div
-        v-for="active in actives"
-        :key="active.id"
+        v-for="event in events"
+        :key="event.id"
         class="card mb-3"
-        @click="acitveDetail(active)"
+        @click="acitveDetail(event)"
         style="cursor: pointer"
       >
         <div class="card-body">
-          <h5>{{ active.title }}</h5>
-          <p>{{ formatDate(active.createat) }}</p>
-          <p>{{ longContent(active.content) }}</p>
+          <h5>{{ event.title }}</h5>
+          <p>{{ formatDate(event.createat) }}</p>
+          <p>{{ longContent(event.content) }}</p>
         </div>
       </div>
     </div>

@@ -23,7 +23,7 @@ const submitForm = async () => {
     !errors.value.time &&
     !errors.value.location
   ) {
-    await addDoc(collection(db, 'actives'), {
+    await addDoc(collection(db, 'events'), {
       title: formData.value.title,
       content: formData.value.content,
       time: formData.value.time,
@@ -98,10 +98,10 @@ const validateLocation = (blur) => {
 </script>
 
 <template>
-  <!-- add active form -->
-  <div class="container mt-5 d-flex justify-content-center">
-      <div class="user-form">
-        <h1 class="text-center">Active Management</h1>
+  <!-- add event form -->
+  <div class="form-container mt-5 d-flex justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <h1 class="text-center">Add a Event</h1>
     <form @submit.prevent="submitForm">
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>

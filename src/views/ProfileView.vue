@@ -10,7 +10,7 @@
           <button class="btn btn-danger" @click="logout">Logout</button>
         </div>
       </div>
-      <ActiveForm />
+      <EventForm />
     </div>
   </div>
 
@@ -22,7 +22,7 @@ import { useRouter } from 'vue-router'
 import { isAuthenticated, logout as appLogout } from '@/auth'
 import '@/firebase/init'
 import { getAuth, signOut } from 'firebase/auth'
-import ActiveForm from '@/components/ActiveForm.vue'
+import EventForm from '@/components/EventForm.vue'
 
 const router = useRouter()
 

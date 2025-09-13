@@ -1,13 +1,14 @@
 <template>
   <div class="container mt-5">
     <button @click="goBack" class="btn btn-primary mb-3">← Back</button>
-    <div v-if="activeDetail" class="card">
+    <div v-if="eventDetail" class="card">
       <div class="card-body">
-        <h3>{{ activeDetail.title }}</h3>
-        <p>{{ formatDate(activeDetail.createat) }}</p>
-        <p>{{ activeDetail.content }}</p>
-        <p>Location: {{ activeDetail.location }}</p>
-        <p>Start Time: {{ formatDate(activeDetail.time) }}</p>
+        <h3>{{ eventDetail.title }}</h3>
+        <p>{{ formatDate(eventDetail.createat) }}</p>
+        <p>{{ eventDetail.content }}</p>
+        <p>Location: {{ eventDetail.location }}</p>
+        <p>Start Time: {{ formatDate(eventDetail.time) }}</p>
+        <p>Organizer email: {{ eventDetail.email }}</p>
         <div class="rating-container mt-4">
           <form @submit.prevent="ratingSubmit" class="d-flex flex-column gap-3 align-items-center">
             <div class="d-flex flex-column align-items-center gap-2">
@@ -37,16 +38,16 @@ import { isAuthenticated } from '@/auth'
 
 const route = useRoute()
 const router = useRouter()
-const activeDetail = ref(null)
+const eventDetail = ref(null)
 const ratingValue = ref(0)
 const errors = ref({ rating: null })
 
-const loadActiveDetail = async () => {
+const loadEventDetail = async () => {
   try {
-    const activeId = route.params.id
-    const docReference = doc(db, 'actives', activeId)
+    const eventId = route.params.id
+    const docReference = doc(db, 'events', eventId)
     const docSnapshot = await getDoc(docReference)
-    activeDetail.value = {
+    eventDetail.value = {
       id: docSnapshot.id,
       ...docSnapshot.data(),
     }
@@ -78,16 +79,16 @@ const ratingSubmit = async () => {
   validateRating(true)
   if (!errors.value.rating) {
     try {
-      // find the user who created this active
+      // find the user who created this event
       const usersQuery = query(
         collection(db, 'users'),
-        where('email', '==', activeDetail.value.email),
+        where('email', '==', eventDetail.value.email),
       )
       const userSnapshot = await getDocs(usersQuery)
       const userDoc = userSnapshot.docs[0]
       const userData = userDoc.data()
       const currentRating = userData.rating
-      // calculate the average between publish the active user and this rating
+      // calculate the average between publish the event user and this rating
       const newRating = Math.round(((currentRating + ratingValue.value) / 2) * 100) / 100
       await updateDoc(doc(db, 'users', userDoc.id), {
         rating: newRating,
@@ -100,7 +101,7 @@ const ratingSubmit = async () => {
 }
 
 onMounted(() => {
-  loadActiveDetail()
+  loadEventDetail()
 })
 </script>
 
