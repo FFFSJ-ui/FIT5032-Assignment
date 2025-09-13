@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5">
-    <button @click="goBack" class="btn btn-secondary mb-3">← Back</button>
+    <button @click="goBack" class="btn btn-primary mb-3">← Back</button>
     <div v-if="activeDetail" class="card">
       <div class="card-body">
         <h3>{{ activeDetail.title }}</h3>
@@ -19,7 +19,7 @@
               />
               <div v-if="errors.rating" class="text-danger">{{ errors.rating }}</div>
             </div>
-            <Button type="submit" severity="secondary" label="Submit" />
+            <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
       </div>
@@ -33,7 +33,6 @@ import { useRoute, useRouter } from 'vue-router'
 import db from '@/firebase/init'
 import { doc, getDoc, collection, query, where, getDocs, updateDoc } from 'firebase/firestore'
 import Rating from 'primevue/rating'
-import Button from 'primevue/button'
 import { isAuthenticated } from '@/auth'
 
 const route = useRoute()
@@ -58,7 +57,7 @@ const loadActiveDetail = async () => {
 }
 
 const goBack = () => {
-  router.push('/active')
+  router.push('/home')
 }
 
 const formatDate = (date) => {
@@ -104,3 +103,9 @@ onMounted(() => {
   loadActiveDetail()
 })
 </script>
+
+<style scoped>
+:deep(.p-rating .p-rating-icon) {
+  color: #000000 !important; 
+}
+</style>

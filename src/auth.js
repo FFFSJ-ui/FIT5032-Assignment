@@ -9,24 +9,26 @@ export const currentUser = ref(null)
 const auth = getAuth()
 
 const isAuthInitialized = ref(false)
-let resolveInitialization 
-const initializationPromise  = new Promise((resolve) => (resolveInitialization = resolve))
+let resolveInitialization
+const initializationPromise = new Promise((resolve) => (resolveInitialization = resolve))
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     isAuthenticated.value = true
     try {
-      const querySnapshot = await getDocs(query(collection(db, 'users'), where('email', '==', user.email), limit(1)))
-        if (!querySnapshot.empty) {
-          const data = querySnapshot.docs[0].data() || {}
-          setCurrentUser({
-            uid: user.uid,
-            email: user.email,
-            username: data.username,
-            role: data.role,
-            rating: data.rating,
-          })
-        } else {
+      const querySnapshot = await getDocs(
+        query(collection(db, 'users'), where('email', '==', user.email), limit(1)),
+      )
+      if (!querySnapshot.empty) {
+        const data = querySnapshot.docs[0].data() || {}
+        setCurrentUser({
+          uid: user.uid,
+          email: user.email,
+          username: data.username,
+          role: data.role,
+          rating: data.rating,
+        })
+      } else {
         currentUser.value = { uid: user.uid, email: user.email }
       }
     } catch (error) {

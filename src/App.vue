@@ -53,7 +53,15 @@ const route = useRoute()
 
 .container {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 10px;
+}
 
+.form-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 90%;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
   /* background-color: #e0bfbf; */

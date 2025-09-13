@@ -9,10 +9,8 @@
         <div class="text-center mt-4">
           <button class="btn btn-danger" @click="logout">Logout</button>
         </div>
-        <div>
-          <ActiveForm />
-        </div>
       </div>
+      <ActiveForm />
     </div>
   </div>
 

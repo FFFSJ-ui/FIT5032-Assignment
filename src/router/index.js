@@ -13,37 +13,37 @@ import ActiveDetailView from '@/views/ActiveDetailView.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/home'
+    redirect: '/home',
   },
   {
     path: '/first',
     name: 'First',
-    component: FirstView
+    component: FirstView,
   },
   {
     path: '/home',
     name: 'Home',
-    component: HomeView
+    component: HomeView,
   },
   {
     path: '/active',
     name: 'Active',
-    component: ActiveView
+    component: ActiveView,
   },
   {
     path: '/active/:id',
     name: 'ActiveDetail',
-    component: ActiveDetailView
+    component: ActiveDetailView,
   },
   {
     path: '/ai',
     name: 'Ai',
-    component: AiView
+    component: AiView,
   },
   {
     path: '/map',
     name: 'Map',
-    component: MapView
+    component: MapView,
   },
   {
     path: '/profile',
@@ -54,7 +54,7 @@ const routes = [
   {
     path: '/about',
     name: 'About',
-    component: AboutView
+    component: AboutView,
   },
   {
     path: '/dashboard',
@@ -66,10 +66,10 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 })
 
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   await waitInitialization()
   if (to.meta && to.meta.requiresAuth) {
     const loggedIn = !!isAuthenticated.value
@@ -80,4 +80,4 @@ router.beforeEach(async(to, from, next) => {
   next()
 })
 
-  export default router
+export default router

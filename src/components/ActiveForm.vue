@@ -99,8 +99,9 @@ const validateLocation = (blur) => {
 
 <template>
   <!-- add active form -->
-  <div class="form-container mt-5">
-    <h1 class="text-center">Active Management</h1>
+  <div class="container mt-5 d-flex justify-content-center">
+      <div class="user-form">
+        <h1 class="text-center">Active Management</h1>
     <form @submit.prevent="submitForm">
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
@@ -158,18 +159,12 @@ const validateLocation = (blur) => {
         <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button>
       </div>
     </form>
-  </div>
+      </div>
+    </div>
+    
 </template>
 
 <style>
-.form-container {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  width: 90%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  border-radius: 10px;
-}
 
 /* ID selectors */
 #title:focus,

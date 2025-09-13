@@ -35,7 +35,7 @@
                 >Home</router-link
               >
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <router-link
                 to="/active"
                 class="nav-link"
@@ -43,12 +43,12 @@
                 @click="closeOffcanvas"
                 >Active</router-link
               >
-            </li>
-            <!-- <li class="nav-item">
+            </li> -->
+            <li class="nav-item">
               <router-link to="/ai" class="nav-link" active-class="active" @click="closeOffcanvas"
                 >AI</router-link
               >
-            </li> -->
+            </li>
             <li class="nav-item">
               <router-link to="/map" class="nav-link" active-class="active" @click="closeOffcanvas"
                 >Map</router-link

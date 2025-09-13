@@ -47,4 +47,8 @@ const toggleForm = () => {
 :deep(.list-group-item) {
   padding: 10px;
 }
+
+.btn {
+  margin-top: 20px;
+}
 </style>
