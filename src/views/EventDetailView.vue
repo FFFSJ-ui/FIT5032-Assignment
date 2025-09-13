@@ -88,7 +88,7 @@ const ratingSubmit = async () => {
       const userDoc = userSnapshot.docs[0]
       const userData = userDoc.data()
       const currentRating = userData.rating
-      // calculate the average between publish the event user and this rating
+      // calculate the average between the rating of user for the event and Publisher's own rating
       const newRating = Math.round(((currentRating + ratingValue.value) / 2) * 100) / 100
       await updateDoc(doc(db, 'users', userDoc.id), {
         rating: newRating,
