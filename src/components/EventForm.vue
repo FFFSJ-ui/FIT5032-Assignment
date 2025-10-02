@@ -32,6 +32,7 @@ const submitForm = async () => {
       createat: serverTimestamp(),
     })
     clearForm()
+    alert('Event added successfully!')
   }
 }
 
