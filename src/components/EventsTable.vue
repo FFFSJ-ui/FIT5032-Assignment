@@ -1,14 +1,15 @@
 <template>
   <div class="container mt-4">
-    <h1>User Management</h1>
+    <h1>Event Management</h1>
     <!-- Search -->
     <div class="row g-2">
       <div class="col-md-3">
         <select v-model="searchColumn" class="form-select">
-          <option value="username">Username</option>
+          <option value="title">Title</option>
+          <option value="content">Content</option>
+          <option value="location">Location</option>
+          <option value="time">Time</option>
           <option value="email">Email</option>
-          <option value="rating">Rating</option>
-          <option value="role">Role</option>
         </select>
       </div>
       <div class="col-md-6">
@@ -40,24 +41,26 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="user in paginatedUsers" :key="user.id">
+        <tr v-for="event in paginatedEvents" :key="event.id">
           <td v-for="column in columns" :key="column">
             <input
-              v-if="editing === user.id && column !== 'role' && column !== 'email'"
+              v-if="editing === event.id && column !== 'time' && column !== 'email'"
               v-model="form[column]"
               type="text"
               class="form-control"
             />
-            <span v-else>{{ user[column] }}</span>
+            <span v-else>{{
+              column === 'time' ? formatTimestamp(event[column]) : event[column]
+            }}</span>
           </td>
           <td>
-            <div v-if="editing === user.id">
+            <div v-if="editing === event.id">
               <button @click="save" class="btn btn-success btn-sm me-1">Save</button>
               <button @click="editing = null" class="btn btn-secondary btn-sm">Cancel</button>
             </div>
             <div v-else>
-              <button @click="edit(user)" class="btn btn-primary btn-sm me-1">Edit</button>
-              <button @click="remove(user)" class="btn btn-danger btn-sm">Delete</button>
+              <button @click="edit(event)" class="btn btn-primary btn-sm me-1">Edit</button>
+              <button @click="remove(event)" class="btn btn-danger btn-sm">Delete</button>
             </div>
           </td>
         </tr>
@@ -65,7 +68,7 @@
     </table>
     <!-- Pagination -->
     <div class="card">
-      <Paginator :rows="10" :totalRecords="sortedUsers.length" @page="onPageChange"></Paginator>
+      <Paginator :rows="10" :totalRecords="sortedEvents.length" @page="onPageChange"></Paginator>
     </div>
   </div>
 </template>
@@ -76,21 +79,21 @@ import db from '../firebase/init.js'
 import { doc, updateDoc, deleteDoc, collection, query, where, getDocs } from 'firebase/firestore'
 import Paginator from 'primevue/paginator'
 
-const users = ref([])
-const columns = ['username', 'email', 'rating', 'role']
+const events = ref([])
+const columns = ['title', 'content', 'location', 'time', 'email']
 const editing = ref(null)
 const form = reactive({})
-const searchColumn = ref('username')
+const searchColumn = ref('title')
 const searchValue = ref('')
-const sortColumn = ref('username')
+const sortColumn = ref('title')
 const sortDirection = ref('asc')
 const currentPage = ref(1)
+const pageSize = 10
 
 // Header sorting
-const sortedUsers = computed(() => {
-  if (!users.value.length) return []
-
-  return [...users.value].sort((a, b) => {
+const sortedEvents = computed(() => {
+  if (!events.value.length) return []
+  return [...events.value].sort((a, b) => {
     const aVal = a[sortColumn.value]
     const bVal = b[sortColumn.value]
     const comparison = String(aVal || '').localeCompare(String(bVal || ''))
@@ -112,60 +115,81 @@ function sort(column) {
 }
 
 // Pagination
-const paginatedUsers = computed(() => {
+const paginatedEvents = computed(() => {
   // Indexes start at 0
-  const start = (currentPage.value - 1) * 10
-  const end = start + 10
-  return sortedUsers.value.slice(start, end)
+  const start = (currentPage.value - 1) * pageSize
+  const end = start + pageSize
+  return sortedEvents.value.slice(start, end)
 })
 
 function onPageChange(event) {
   currentPage.value = Math.floor(event.first / 10) + 1
 }
 
+function formatTimestamp(timestamp) {
+  if (!timestamp) return ''
+  if (timestamp.toDate) {
+    return timestamp.toDate().toLocaleString()
+  }
+  return timestamp
+}
+
 async function clear() {
   searchValue.value = ''
   currentPage.value = 1
-  let q = collection(db, 'users')
-  users.value = (await getDocs(q)).docs.map((d) => ({ id: d.id, ...d.data() }))
+  let q = collection(db, 'events')
+  events.value = (await getDocs(q)).docs.map((d) => ({ id: d.id, ...d.data() }))
 }
 
 // Precise search
 async function find() {
   currentPage.value = 1
-  let q = !searchValue.value
-    ? collection(db, 'users')
-    : query(collection(db, 'users'), where(searchColumn.value, '==', searchValue.value))
-  users.value = (await getDocs(q)).docs.map((d) => ({ id: d.id, ...d.data() }))
+  if (!searchValue.value) {
+    let q = collection(db, 'events')
+    events.value = (await getDocs(q)).docs.map((d) => ({ id: d.id, ...d.data() }))
+  } else if (searchColumn.value === 'time') {
+    // Use formatTimestamp to handle time column
+    let q = collection(db, 'events')
+    const allEvents = (await getDocs(q)).docs.map((d) => ({ id: d.id, ...d.data() }))
+    events.value = allEvents.filter(event => {
+      const formattedTime = formatTimestamp(event.time)
+      return formattedTime.includes(searchValue.value)
+    })
+  } else {
+    let q = query(collection(db, 'events'), where(searchColumn.value, '==', searchValue.value))
+    events.value = (await getDocs(q)).docs.map((d) => ({ id: d.id, ...d.data() }))
+  }
 }
 
-function edit(user) {
-  editing.value = user.id
-  form.username = user.username
-  form.email = user.email
-  form.rating = user.rating
-  form.role = user.role
+function edit(event) {
+  editing.value = event.id
+  form.title = event.title
+  form.content = event.content
+  form.location = event.location
+  form.time = event.time
+  form.email = event.email
 }
 
 async function save() {
   const data = {
-    username: form.username,
+    title: form.title,
+    content: form.content,
+    location: form.location,
+    time: form.time,
     email: form.email,
-    rating: form.rating,
-    role: form.role,
   }
-  await updateDoc(doc(db, 'users', editing.value), data)
-  const userIndex = users.value.findIndex((u) => u.id === editing.value)
-  if (userIndex !== -1) {
-    users.value[userIndex] = { id: editing.value, ...data }
+  await updateDoc(doc(db, 'events', editing.value), data)
+  const eventIndex = events.value.findIndex((e) => e.id === editing.value)
+  if (eventIndex !== -1) {
+    events.value[eventIndex] = { id: editing.value, ...data }
   }
   editing.value = null
 }
 
-async function remove(user) {
-  if (!confirm(`Delete user "${user.username}"?`)) return
-  await deleteDoc(doc(db, 'users', user.id))
-  users.value = users.value.filter((u) => u.id !== user.id)
+async function remove(event) {
+  if (!confirm(`Delete event "${event.title}"?`)) return
+  await deleteDoc(doc(db, 'events', event.id))
+  events.value = events.value.filter((e) => e.id !== event.id)
 }
 
 onMounted(clear)

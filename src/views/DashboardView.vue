@@ -1,4 +1,5 @@
 <script setup>
+import EventsTable from '@/components/EventsTable.vue';
 import UsersTable from '@/components/UsersTable.vue'
 
 </script>
@@ -7,20 +8,20 @@ import UsersTable from '@/components/UsersTable.vue'
   <div class="container mt-5">
     <div class="row">
       <div class="col-md-8 offset-md-2">
-        <h1 class="text-center">Users Table</h1>
+        <h1 class="text-center">Admin Dashboard</h1>
       </div>
       <UsersTable />
+      <EventsTable />
     </div>
   </div>
 </template>
 
 
 <style>
-/* DataTable */
-.p-datatable td {
-  white-space: normal;
-  word-wrap: break-word;
-  word-break: break-word;
-  max-width: 400px;
+/* Actives column */
+.table th:last-child,
+.table td:last-child {
+  min-width: 100px;
+  white-space: nowrap;
 }
 </style>
