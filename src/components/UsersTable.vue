@@ -3,7 +3,7 @@
     <h1>User Management</h1>
     <!-- Search -->
     <div class="row g-2">
-      <div class="col-md-3">
+      <div class="col-md-2">
         <select v-model="searchColumn" class="form-select">
           <option value="username">Username</option>
           <option value="email">Email</option>
@@ -20,9 +20,10 @@
           @keyup.enter="find"
         />
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <button @click="find" class="btn btn-primary me-1">Search</button>
-        <button @click="clear" class="btn btn-secondary">Clear</button>
+        <button @click="clear" class="btn btn-secondary me-1">Clear</button>
+        <ExportData :data="users" :columns="columns" filename="users" />
       </div>
     </div>
     <!-- Data table -->
@@ -75,6 +76,7 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import db from '../firebase/init.js'
 import { doc, updateDoc, deleteDoc, collection, query, where, getDocs } from 'firebase/firestore'
 import Paginator from 'primevue/paginator'
+import ExportData from './ExportData.vue'
 
 const users = ref([])
 const columns = ['username', 'email', 'rating', 'role']

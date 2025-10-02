@@ -3,7 +3,7 @@
     <h1>Event Management</h1>
     <!-- Search -->
     <div class="row g-2">
-      <div class="col-md-3">
+      <div class="col-md-2">
         <select v-model="searchColumn" class="form-select">
           <option value="title">Title</option>
           <option value="content">Content</option>
@@ -21,9 +21,10 @@
           @keyup.enter="find"
         />
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <button @click="find" class="btn btn-primary me-1">Search</button>
-        <button @click="clear" class="btn btn-secondary">Clear</button>
+        <button @click="clear" class="btn btn-secondary me-1">Clear</button>
+        <ExportData :data="events" :columns="columns" filename="events" />
       </div>
     </div>
     <!-- Data table -->
@@ -78,6 +79,7 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import db from '../firebase/init.js'
 import { doc, updateDoc, deleteDoc, collection, query, where, getDocs } from 'firebase/firestore'
 import Paginator from 'primevue/paginator'
+import ExportData from './ExportData.vue'
 
 const events = ref([])
 const columns = ['title', 'content', 'location', 'time', 'email']
