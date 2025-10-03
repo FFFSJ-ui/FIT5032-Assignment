@@ -129,7 +129,6 @@ function onPageChange(event) {
 }
 
 function formatTimestamp(timestamp) {
-  if (!timestamp) return ''
   if (timestamp.toDate) {
     return timestamp.toDate().toLocaleString()
   }

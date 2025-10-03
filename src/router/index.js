@@ -4,7 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import FirstView from '@/views/FirstView.vue'
 import EventView from '@/views/EventView.vue'
-import AiView from '@/views/AiView.vue'
+import ApiView from '@/views/ApiView.vue'
 import MapView from '@/views/MapView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import DashboardView from '@/views/DashboardView.vue'
@@ -36,9 +36,9 @@ const routes = [
     component: EventDetailView,
   },
   {
-    path: '/ai',
-    name: 'Ai',
-    component: AiView,
+    path: '/api',
+    name: 'Api',
+    component: ApiView,
   },
   {
     path: '/map',

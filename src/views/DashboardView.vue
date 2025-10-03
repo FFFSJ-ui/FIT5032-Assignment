@@ -1,5 +1,6 @@
 <script setup>
 import EventsTable from '@/components/EventsTable.vue';
+import PieChart from '@/components/PieChart.vue';
 import UsersTable from '@/components/UsersTable.vue'
 
 </script>
@@ -12,6 +13,7 @@ import UsersTable from '@/components/UsersTable.vue'
       </div>
       <UsersTable />
       <EventsTable />
+      <PieChart />
     </div>
   </div>
 </template>

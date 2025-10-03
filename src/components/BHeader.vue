@@ -45,8 +45,8 @@
               >
             </li> -->
             <li class="nav-item">
-              <router-link to="/ai" class="nav-link" active-class="active" @click="closeOffcanvas"
-                >AI</router-link
+              <router-link to="/api" class="nav-link" active-class="active" @click="closeOffcanvas"
+                >API</router-link
               >
             </li>
             <li class="nav-item">

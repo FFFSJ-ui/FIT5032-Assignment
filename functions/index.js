@@ -21,9 +21,13 @@ exports.countUsers = onRequest((req, res) => {
     try {
       const usersCollection = admin.firestore().collection("users");
       const snapshot = await usersCollection.get();
-      const count = snapshot.size;
-
-      res.status(200).send({count});
+      const roleCounts = {};
+      snapshot.forEach((doc) => {
+        const userData = doc.data();
+        const role = userData.role;
+        roleCounts[role] = (roleCounts[role] || 0) + 1;
+      });
+      res.status(200).send({roleCounts});
     } catch (error) {
       console.error("Error counting users:", error.message);
       res.status(500).send("Error counting users");
