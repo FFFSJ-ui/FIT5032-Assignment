@@ -35,6 +35,67 @@ exports.countUsers = onRequest((req, res) => {
   });
 });
 
+/**
+ * Fetch event data from Firestore
+ * @param {Array} fields - fields to include in the result
+ * @return {Promise<Array>} events data
+ */
+async function fetchEvents(fields) {
+  const eventsRef = admin.firestore().collection("events");
+  const snapshot = await eventsRef.get();
+  const results = [];
+  snapshot.forEach((doc) => {
+    const eventData = doc.data();
+    const event = {};
+    // Processing fields
+    for (const field of fields) {
+      if (field === "time") {
+        if (eventData.time.toDate) {
+          event.time = eventData.time.toDate().toLocaleString();
+        } else {
+          event.time = eventData.time;
+        }
+      } else {
+        event[field] = eventData[field] || "";
+      }
+    }
+    results.push(event);
+  });
+  return results;
+}
+
+// Get event data including location
+exports.eventsLocation = onRequest((req, res) => {
+  cors(req, res, async () => {
+    try {
+      const events = await fetchEvents(["title", "content", "location"]);
+      res.json({
+        events: events,
+        total: events.length,
+      });
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      res.status(500).json({error: "Server error"});
+    }
+  });
+});
+
+// Get event data including time
+exports.eventsTime = onRequest((req, res) => {
+  cors(req, res, async () => {
+    try {
+      const events = await fetchEvents(["title", "content", "time"]);
+      res.json({
+        events: events,
+        total: events.length,
+      });
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      res.status(500).json({error: "Server error"});
+    }
+  });
+});
+
 // For cost control, you can set the maximum number of containers that can be
 // running at the same time. This helps mitigate the impact of unexpected
 // traffic spikes by instead downgrading performance. This limit is a
