@@ -23,6 +23,7 @@ import { isAuthenticated, logout as appLogout } from '@/auth'
 import '@/firebase/init'
 import { getAuth, signOut } from 'firebase/auth'
 import EventForm from '@/components/EventForm.vue'
+import SendGrid from '@/components/SendGrid.vue'
 
 const router = useRouter()
 

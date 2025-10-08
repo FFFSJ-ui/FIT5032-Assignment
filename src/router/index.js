@@ -9,7 +9,8 @@ import MapView from '@/views/MapView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import EventDetailView from '@/views/EventDetailView.vue'
-
+import EventsLocationAPI from '@/components/EventsLocationAPI.vue'
+import EventsTimeAPI from '@/components/EventsTimeAPI.vue'
 const routes = [
   {
     path: '/',
@@ -62,6 +63,18 @@ const routes = [
     component: DashboardView,
     meta: { requiresAuth: true },
   },
+{
+  path: '/eventsLocation',
+  name: 'EventsLocation',
+  component:EventsLocationAPI,
+  meta: { hideHeader: true },
+},
+{
+  path: '/eventsTime', 
+  name: 'EventsTime',
+  component: EventsTimeAPI,
+  meta: { hideHeader: true },
+},
 ]
 
 const router = createRouter({

@@ -3,14 +3,13 @@
     <h1 class="text-center">API Access</h1>
     <div class="card mb-3">
       <div class="card-body">
-        <h2 class="card-title">Events API 1</h2>
+        <h2 class="card-title">Events Location API</h2>
         <p class="card-text">
           <strong>Provides:</strong> title, content, location<br />
-          <strong>URL: </strong>
           <a
             :href="endpoints.eventsLocation"
             target="_blank"
-            class="text-decoration-none"
+            class="text-decoration-none fw-bold fs-4"
           >
             <code>{{ endpoints.eventsLocation }}</code>
           </a>
@@ -19,14 +18,13 @@
     </div>
     <div class="card">
       <div class="card-body">
-        <h2 class="card-title">Events API 2</h2>
+        <h2 class="card-title">Events Time API</h2>
         <p class="card-text">
           <strong>Provides:</strong> title, content, time<br />
-          <strong>URL: </strong>
           <a
             :href="endpoints.eventsTime"
             target="_blank"
-            class="text-decoration-none"
+            class="text-decoration-none fw-bold fs-4"
           >
             <code>{{ endpoints.eventsTime }}</code>
           </a>

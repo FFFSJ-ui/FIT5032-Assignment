@@ -1,8 +1,8 @@
 <script setup>
 import EventsTable from '@/components/EventsTable.vue';
-import PieChart from '@/components/PieChart.vue';
+import LineChart from '@/components/LineChart.vue';
 import UsersTable from '@/components/UsersTable.vue'
-
+import SendGrid from '@/components/SendGrid.vue'
 </script>
 
 <template>
@@ -13,7 +13,10 @@ import UsersTable from '@/components/UsersTable.vue'
       </div>
       <UsersTable />
       <EventsTable />
-      <PieChart />
+      <div class="mt-4">
+        <LineChart />
+      </div>
+      <SendGrid />
     </div>
   </div>
 </template>
