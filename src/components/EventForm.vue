@@ -100,80 +100,72 @@ const validateLocation = (blur) => {
 
 <template>
   <!-- add event form -->
-  <div class="form-container mt-5 d-flex justify-content-center">
-      <div class="col-md-8 col-lg-6">
-        <h1 class="text-center">Add a Event</h1>
-    <form @submit.prevent="submitForm">
-      <div class="mb-3">
-        <label for="title" class="form-label">Title</label>
-        <input
-          type="text"
-          class="form-control"
-          id="title"
-          @blur="() => validateTitle(true)"
-          @input="() => validateTitle(false)"
-          v-model="formData.title"
-        />
-        <div v-if="errors.title" class="text-danger">{{ errors.title }}</div>
+  <div class="form-container">
+    <div>
+      <h1 class="text-center">Add a Event</h1>
+      <form @submit.prevent="submitForm">
         <div class="mb-3">
-          <label for="time" class="form-label">Time</label>
-          <DatePicker
-            id="datepicker-24h"
-            v-model="formData.time"
-            showTime
-            hourFormat="24"
-            fluid
-            :editable="false"
-            @blur="() => validateTime(true)"
-            @input="() => validateTime(false)"
-            @date-select="() => validateTime(false)"
-          />
-          <div v-if="errors.time" class="text-danger">{{ errors.time }}</div>
-        </div>
-        <div class="mb-3">
-          <label for="location" class="form-label">Location</label>
+          <label for="title" class="form-label">Title</label>
           <input
             type="text"
             class="form-control"
-            id="location"
-            @blur="() => validateLocation(true)"
-            @input="() => validateLocation(false)"
-            v-model="formData.location"
+            id="title"
+            @blur="() => validateTitle(true)"
+            @input="() => validateTitle(false)"
+            v-model="formData.title"
           />
-          <div v-if="errors.location" class="text-danger">{{ errors.location }}</div>
+          <div v-if="errors.title" class="text-danger">{{ errors.title }}</div>
+          <div class="mb-3">
+            <label for="time" class="form-label">Time</label>
+            <DatePicker
+              id="datepicker-24h"
+              v-model="formData.time"
+              showTime
+              hourFormat="24"
+              fluid
+              :editable="false"
+              @blur="() => validateTime(true)"
+              @input="() => validateTime(false)"
+              @date-select="() => validateTime(false)"
+            />
+            <div v-if="errors.time" class="text-danger">{{ errors.time }}</div>
+          </div>
+          <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input
+              type="text"
+              class="form-control"
+              id="location"
+              @blur="() => validateLocation(true)"
+              @input="() => validateLocation(false)"
+              v-model="formData.location"
+            />
+            <div v-if="errors.location" class="text-danger">
+              {{ errors.location }}
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="content" class="form-label">Content</label>
+            <textarea
+              class="form-control"
+              id="content"
+              rows="3"
+              v-model="formData.content"
+              @blur="() => validateContent(true)"
+              @input="() => validateContent(false)"
+            ></textarea>
+            <div v-if="errors.content" class="text-danger">
+              {{ errors.content }}
+            </div>
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="content" class="form-label">Content</label>
-          <textarea
-            class="form-control"
-            id="content"
-            rows="3"
-            v-model="formData.content"
-            @blur="() => validateContent(true)"
-            @input="() => validateContent(false)"
-          ></textarea>
-          <div v-if="errors.content" class="text-danger">{{ errors.content }}</div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary me-2">Submit</button>
+          <button type="button" class="btn btn-secondary" @click="clearForm">
+            Clear
+          </button>
         </div>
-      </div>
-      <div class="text-center">
-        <button type="submit" class="btn btn-primary me-2">Submit</button>
-        <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button>
-      </div>
-    </form>
-      </div>
+      </form>
     </div>
-    
+  </div>
 </template>
-
-<style>
-
-/* ID selectors */
-#title:focus,
-#content:focus,
-#time:focus,
-#location:focus {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-</style>

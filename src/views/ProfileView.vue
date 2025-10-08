@@ -3,48 +3,48 @@
     <div class="row">
       <div class="col-md-8 offset-md-2">
         <h1 class="text-center">User Profile</h1>
-        <p class="text-center">
-          View your personal information.
-        </p>
+        <p class="text-center">View your personal information.</p>
         <div class="text-center mt-4">
           <button class="btn btn-danger" @click="logout">Logout</button>
         </div>
       </div>
-      <EventForm />
+      <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 mt-5">
+          <EventForm />
+        </div>
+      </div>
+      <SendGrid />
     </div>
   </div>
-
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { isAuthenticated, logout as appLogout } from '@/auth'
-import '@/firebase/init'
-import { getAuth, signOut } from 'firebase/auth'
-import EventForm from '@/components/EventForm.vue'
-import SendGrid from '@/components/SendGrid.vue'
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { isAuthenticated, logout as appLogout } from "@/auth";
+import "@/firebase/init";
+import { getAuth, signOut } from "firebase/auth";
+import EventForm from "@/components/EventForm.vue";
+import SendGrid from "@/components/SendGrid.vue";
 
-const router = useRouter()
+const router = useRouter();
 
 function checkLoggedIn() {
   if (!isAuthenticated.value) {
-    router.replace('/first')
+    router.replace("/first");
   }
 }
 
 async function logout() {
-  const auth = getAuth()
-  await signOut(auth)
-  appLogout()
-  router.replace('/home')
+  const auth = getAuth();
+  await signOut(auth);
+  appLogout();
+  router.replace("/home");
 }
 
 onMounted(() => {
-  checkLoggedIn()
-})
-
+  checkLoggedIn();
+});
 </script>
 
-<style>
-</style>
+<style></style>

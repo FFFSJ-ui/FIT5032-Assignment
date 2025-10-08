@@ -1,8 +1,8 @@
 <script setup>
-import EventsTable from '@/components/EventsTable.vue';
-import LineChart from '@/components/LineChart.vue';
-import UsersTable from '@/components/UsersTable.vue'
-import SendGrid from '@/components/SendGrid.vue'
+import EventsTable from "@/components/EventsTable.vue";
+import LineChart from "@/components/LineChart.vue";
+import UsersTable from "@/components/UsersTable.vue";
+import SendGrid from "@/components/SendGrid.vue";
 </script>
 
 <template>
@@ -13,14 +13,20 @@ import SendGrid from '@/components/SendGrid.vue'
       </div>
       <UsersTable />
       <EventsTable />
-      <div class="mt-4">
+      <div class="mt-5">
+        <h1>Platform activity - events released</h1>
         <LineChart />
       </div>
-      <SendGrid />
+      <div class="col-12">
+        <div class="row justify-content-center">
+          <div class="col-12 col-sm-12 col-md-10 col-lg-9 mt-5">
+            <SendGrid />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
-
 
 <style>
 /* Actives column */
