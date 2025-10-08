@@ -54,6 +54,16 @@ const chartOptions = computed(() => {
         intersect: false,
         titleFont: fontStyle,
         bodyFont: fontStyle,
+        displayColors: false,
+        callbacks: {
+          title: (tooltipItems) => {
+            const item = tooltipItems[0];
+            return selectedMonth.value === "year"
+              ? `Month: ${item.label}`
+              : `Day: ${item.label}`;
+          },
+          label: (tooltipItem) => `Events: ${tooltipItem.formattedValue}`,
+        },
       },
     },
     scales: {
