@@ -3,22 +3,22 @@
     <LoginForm v-if="isLogin" />
     <RegisterForm v-else />
     <div class="text-center mb-4">
-    <button @click="toggleForm" class="btn btn-primary mb-4">
-      {{ isLogin ? 'Register' : 'Login' }}
-    </button>
+      <button @click="toggleForm" class="btn btn-primary mb-4">
+        {{ isLogin ? "Register" : "Login" }}
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import LoginForm from '@/components/LoginForm.vue'
-import RegisterForm from '@/components/RegisterForm.vue'
+import { ref } from "vue";
+import LoginForm from "@/components/LoginForm.vue";
+import RegisterForm from "@/components/RegisterForm.vue";
 
-const isLogin = ref(true)
+const isLogin = ref(true);
 const toggleForm = () => {
-  isLogin.value = !isLogin.value
-}
+  isLogin.value = !isLogin.value;
+};
 </script>
 
 <style scoped>

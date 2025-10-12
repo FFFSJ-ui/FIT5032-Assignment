@@ -46,5 +46,3 @@ onMounted(() => {
   checkLoggedIn();
 });
 </script>
-
-<style></style>

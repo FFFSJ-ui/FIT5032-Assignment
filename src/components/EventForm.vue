@@ -1,101 +1,103 @@
 <script setup>
-import { ref } from 'vue'
-import DatePicker from 'primevue/calendar'
-import db from '@/firebase/init'
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
-import { currentUser } from '@/auth'
+import { ref } from "vue";
+import DatePicker from "primevue/calendar";
+import db from "@/firebase/init";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { currentUser } from "@/auth";
 
 const formData = ref({
-  title: '',
-  content: '',
-  time: '',
-  location: '',
-})
+  title: "",
+  content: "",
+  time: "",
+  location: "",
+});
 
 const submitForm = async () => {
-  validateTitle(true)
-  validateContent(true)
-  validateTime(true)
-  validateLocation(true)
+  validateTitle(true);
+  validateContent(true);
+  validateTime(true);
+  validateLocation(true);
   if (
     !errors.value.title &&
     !errors.value.content &&
     !errors.value.time &&
     !errors.value.location
   ) {
-    await addDoc(collection(db, 'events'), {
+    await addDoc(collection(db, "events"), {
       title: formData.value.title,
       content: formData.value.content,
       time: formData.value.time,
       location: formData.value.location,
       email: currentUser.value.email,
       createat: serverTimestamp(),
-    })
-    clearForm()
-    alert('Event added successfully!')
+    });
+    clearForm();
+    alert("Event added successfully!");
   }
-}
+};
 
 const clearForm = () => {
   formData.value = {
-    title: '',
-    content: '',
-    time: '',
-    location: '',
-  }
-}
+    title: "",
+    content: "",
+    time: "",
+    location: "",
+  };
+};
 
 const errors = ref({
   title: null,
   content: null,
   time: null,
   location: null,
-})
+});
 
 const validateTitle = (blur) => {
-  const title = formData.value.title
+  const title = formData.value.title;
   if (formData.value.title.length < 3 || formData.value.title.length > 100) {
-    if (blur) errors.value.title = 'Title must be 3 - 100 characters'
+    if (blur) errors.value.title = "Title must be 3 - 100 characters";
   } else if (!/^[a-zA-Z0-9\s.,!?'"():;@#%&*\-+=/_]*$/.test(title)) {
     if (blur)
-      errors.value.title = 'Title must be letters, numbers, spaces or common punctuation marks'
+      errors.value.title =
+        "Title must be letters, numbers, spaces or common punctuation marks";
   } else {
-    errors.value.title = null
+    errors.value.title = null;
   }
-}
+};
 
 const validateContent = (blur) => {
-  const content = formData.value.content
+  const content = formData.value.content;
   if (formData.value.content.length > 500) {
-    if (blur) errors.value.content = 'Content must be within 500 characters'
+    if (blur) errors.value.content = "Content must be within 500 characters";
   } else if (!/^[a-zA-Z0-9\s.,!?'"():;@#%&*\-+=/_]*$/.test(content)) {
     if (blur)
-      errors.value.content = 'Content must be letters, numbers, spaces or common punctuation marks'
+      errors.value.content =
+        "Content must be letters, numbers, spaces or common punctuation marks";
   } else {
-    errors.value.content = null
+    errors.value.content = null;
   }
-}
+};
 
 const validateTime = (blur) => {
   if (!formData.value.time) {
-    if (blur) errors.value.time = 'Time is required'
+    if (blur) errors.value.time = "Time is required";
   } else {
-    errors.value.time = null
+    errors.value.time = null;
   }
-}
+};
 
 const validateLocation = (blur) => {
-  const location = formData.value.location
+  const location = formData.value.location;
   if (formData.value.location.length < 2) {
-    if (blur) errors.value.location = 'Location must be at least 2 characters'
+    if (blur) errors.value.location = "Location must be at least 2 characters";
   } else if (!/^[a-zA-Z0-9\s.,!?'"():;@#%&*\-+=/_]*$/.test(location)) {
     if (blur)
       errors.value.location =
-        'Location must be letters, numbers, spaces or common punctuation marks'
+        "Location must be letters, numbers, spaces or common punctuation marks";
   } else {
-    errors.value.location = null
+    errors.value.location = null;
   }
-}
+};
 </script>
 
 <template>

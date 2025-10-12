@@ -1,36 +1,36 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import router from '@/router'
-import db from '@/firebase/init'
-import { collection, getDocs, orderBy, query } from 'firebase/firestore'
+import { ref, onMounted } from "vue";
+import router from "@/router";
+import db from "@/firebase/init";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 
-const events = ref([])
+const events = ref([]);
 
 const loadEvents = async () => {
-  const querySnapshot = await getDocs(query(collection(db, 'events'), orderBy('createat', 'desc')))
+  const querySnapshot = await getDocs(
+    query(collection(db, "events"), orderBy("createat", "desc"))
+  );
   events.value = querySnapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
-  }))
-}
+  }));
+};
 
 const acitveDetail = (event) => {
-  router.push(`/event/${event.id}`)
-}
+  router.push(`/event/${event.id}`);
+};
 
 const formatDate = (date) => {
-  return date.toDate().toLocaleString()
-}
+  return date.toDate().toLocaleString();
+};
 
 const longContent = (content) => {
-  return content.length > 100 ? content.substring(0, 100) + '...' : content
-}
+  return content.length > 100 ? content.substring(0, 100) + "..." : content;
+};
 
 onMounted(() => {
-  loadEvents()
-})
-
-
+  loadEvents();
+});
 </script>
 
 <template>
@@ -55,7 +55,6 @@ onMounted(() => {
 </template>
 
 <style>
-
 /* DataTable */
 .p-datatable td {
   white-space: normal;
