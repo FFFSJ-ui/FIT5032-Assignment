@@ -2,21 +2,54 @@
 <template>
   <div class="card">
     <div class="flex justify-content-end mb-4">
-      <Dropdown
-        v-model="selectedMonth"
-        :options="timeOptions"
-        optionLabel="label"
-        optionValue="value"
-        class="w-full md:w-14rem"
-      />
+      <div class="btn-group mb-3 w-100" role="group">
+        <button
+          class="btn btn-outline-success"
+          :class="{ active: activeTab === 'chart' }"
+          @click="activeTab = 'chart'"
+        >
+          Chart
+        </button>
+        <button
+          class="btn btn-outline-success"
+          :class="{ active: activeTab === 'table' }"
+          @click="activeTab = 'table'"
+        >
+          Table
+        </button>
+      </div>
+      <div>
+        <Dropdown
+          v-model="selectedMonth"
+          :options="timeOptions"
+          optionLabel="label"
+          optionValue="value"
+          class="w-full md:w-14rem"
+        />
+      </div>
     </div>
     <Chart
-      v-if="chartData"
+      v-if="chartData && activeTab === 'chart'"
       type="line"
       :data="chartData"
       :options="chartOptions"
       style="height: 300px"
     />
+    <!-- Data table -->
+    <table class="table table-striped" v-if="activeTab === 'table'">
+      <thead class="table-success">
+        <tr>
+          <th>{{ selectedMonth === "year" ? "Month" : "Day" }}</th>
+          <th>Events</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in tableData" :key="index">
+          <td>{{ item.label }}</td>
+          <td>{{ item.value }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -30,6 +63,7 @@ import db from "../firebase/init.js";
 const chartData = ref(null);
 const selectedMonth = ref("year");
 const eventsData = ref([]);
+const activeTab = ref("chart");
 
 // Drop-down box configuration
 const timeOptions = ref([
@@ -102,6 +136,14 @@ onMounted(async () => {
 watch(selectedMonth, () => {
   updateChartData();
 });
+
+const tableData = computed(
+  () =>
+    chartData.value?.labels?.map((label, i) => ({
+      label,
+      value: chartData.value.datasets[0].data[i],
+    })) || []
+);
 
 const loadEventsData = async () => {
   try {
