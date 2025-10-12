@@ -12,7 +12,6 @@
                 @input="getSuggestions"
                 @keyup.enter="search"
                 @focus="getSuggestions"
-                @blur="hideSuggestions"
                 type="text"
                 class="form-control"
                 placeholder="Search places in Australia"
@@ -32,8 +31,10 @@
                   v-for="item in suggestions"
                   :key="item.id"
                   @mousedown="selectPlace(item)"
+                  @keydown.enter.prevent="selectPlace(item)"
                   class="p-2 border-bottom"
                   style="cursor: pointer"
+                  tabindex="0"
                 >
                   <small class="text-muted">{{ item.place_name }}</small>
                 </div>
@@ -58,6 +59,12 @@ const suggestions = ref([]);
 let map, marker;
 
 onMounted(() => {
+  // Click outside to hide suggestions
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.position-relative')) {
+      suggestions.value = [];
+    }
+  });
   // Dynamically load Mapbox GL
   const link = document.createElement("link");
   link.href = "https://api.mapbox.com/mapbox-gl-js/v3.15.0/mapbox-gl.css";
@@ -144,7 +151,4 @@ function selectPlace(place) {
   suggestions.value = [];
   showPlace(place);
 }
-
-// Delay hiding suggestions to avoid conflict with click
-const hideSuggestions = () => setTimeout(() => (suggestions.value = []), 200);
 </script>

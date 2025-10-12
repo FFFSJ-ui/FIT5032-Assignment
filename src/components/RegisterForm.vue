@@ -6,6 +6,9 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { setCurrentUser } from "@/auth";
 
+// Alt + P to show/hide password
+const showPassword = ref(false);
+
 const router = useRouter();
 
 const formData = ref({
@@ -208,12 +211,13 @@ const addUser = async () => {
           <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <input
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               class="form-control"
               id="password"
               @blur="() => validatePassword(true)"
               @input="() => validatePassword(false)"
               v-model="formData.password"
+              @keydown.alt.p="showPassword = !showPassword"
             />
             <div v-if="errors.password" class="text-danger">
               {{ errors.password }}

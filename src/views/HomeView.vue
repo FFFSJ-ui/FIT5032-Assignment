@@ -16,7 +16,7 @@ const loadEvents = async () => {
   }));
 };
 
-const acitveDetail = (event) => {
+const eventDetail = (event) => {
   router.push(`/event/${event.id}`);
 };
 
@@ -41,7 +41,9 @@ onMounted(() => {
         v-for="event in events"
         :key="event.id"
         class="card mb-3"
-        @click="acitveDetail(event)"
+        @click="eventDetail(event)"
+        @keydown.enter="eventDetail(event)" 
+        tabindex="0"       
         style="cursor: pointer"
       >
         <div class="card-body">
