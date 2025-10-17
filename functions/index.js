@@ -16,6 +16,8 @@ const admin = require("firebase-admin");
 const cors = require("cors")({origin: true});
 admin.initializeApp();
 
+setGlobalOptions({maxInstances: 10});
+
 exports.countUsers = onRequest((req, res) => {
   cors(req, res, async () => {
     try {
@@ -69,13 +71,10 @@ exports.eventsLocation = onRequest((req, res) => {
   cors(req, res, async () => {
     try {
       const events = await fetchEvents(["title", "content", "location"]);
-      res.json({
-        events: events,
-        total: events.length,
-      });
+      res.status(200).send({events});
     } catch (error) {
-      console.error("Error fetching events:", error);
-      res.status(500).json({error: "Server error"});
+      console.error("Error getting events with location:", error.message);
+      res.status(500).send("Error getting events with location");
     }
   });
 });
@@ -85,17 +84,38 @@ exports.eventsTime = onRequest((req, res) => {
   cors(req, res, async () => {
     try {
       const events = await fetchEvents(["title", "content", "time"]);
-      res.json({
-        events: events,
-        total: events.length,
-      });
+      res.status(200).send({events});
     } catch (error) {
-      console.error("Error fetching events:", error);
-      res.status(500).json({error: "Server error"});
+      console.error("Error getting events with time:", error.message);
+      res.status(500).send("Error getting events with time");
     }
   });
 });
 
+// Send email using SendGrid API
+const sendGrid = require("@sendgrid/mail");
+sendGrid.setApiKey(process.env.SENDGRID_API_KEY);
+exports.sendEmail = onRequest((req, res) => {
+  cors(req, res, async () => {
+    try {
+      const {to, subject, content, attachment} = req.body;
+      if (!to.length || !subject || !content) {
+        return res.status(400).json({error: "Missing required fields"});
+      }
+      const msg = {
+        to: to.map((email) => email.trim()),
+        from: {email: "v50kfc4@gmail.com", name: "NutriPublic Admin"},
+        subject,
+        text: content,
+      };
+      if (attachment) msg.attachments = [attachment];
+      await sendGrid.send(msg);
+      res.json({success: true, message: "Email sent successfully"});
+    } catch (error) {
+      res.status(500).json({error: error.message, success: false});
+    }
+  });
+});
 // For cost control, you can set the maximum number of containers that can be
 // running at the same time. This helps mitigate the impact of unexpected
 // traffic spikes by instead downgrading performance. This limit is a
