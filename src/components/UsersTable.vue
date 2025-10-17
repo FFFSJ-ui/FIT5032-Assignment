@@ -1,84 +1,89 @@
 <template>
   <div class="container mt-4">
     <h1>User Management</h1>
-    <!-- Search -->
-    <div class="row g-2">
-      <div class="col-md-2">
-        <select v-model="searchColumn" class="form-select">
-          <option value="username">Username</option>
-          <option value="email">Email</option>
-          <option value="rating">Rating</option>
-          <option value="role">Role</option>
-        </select>
+    <div class="table-responsive">
+      <!-- Search -->
+      <div class="row g-2">
+        <div class="col-md-2">
+          <select v-model="searchColumn" class="form-select">
+            <option value="username">Username</option>
+            <option value="email">Email</option>
+            <option value="rating">Rating</option>
+            <option value="role">Role</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <input
+            v-model="searchValue"
+            type="text"
+            class="form-control"
+            :placeholder="`Search by ${searchColumn}`"
+            @keyup.enter="find"
+          />
+        </div>
+        <div class="col-md-4">
+          <button @click="find" class="btn btn-primary me-1">Search</button>
+          <button @click="clear" class="btn btn-secondary me-1">Clear</button>
+          <ExportData :data="users" :columns="columns" filename="users" />
+        </div>
       </div>
-      <div class="col-md-6">
-        <input
-          v-model="searchValue"
-          type="text"
-          class="form-control"
-          :placeholder="`Search by ${searchColumn}`"
-          @keyup.enter="find"
-        />
-      </div>
-      <div class="col-md-4">
-        <button @click="find" class="btn btn-primary me-1">Search</button>
-        <button @click="clear" class="btn btn-secondary me-1">Clear</button>
-        <ExportData :data="users" :columns="columns" filename="users" />
-      </div>
+      <!-- Data table -->
+      <div class="mt-4"></div>
+      <table class="table table-striped">
+        <thead class="table-success">
+          <tr>
+            <th
+              v-for="column in columns"
+              :key="column"
+              @click="sort(column)"
+              style="cursor: pointer"
+            >
+              {{ column }}
+              <span v-if="sortColumn === column">
+                {{ sortDirection === "asc" ? "↑" : "↓" }}
+              </span>
+            </th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="user in paginatedUsers" :key="user.id">
+            <td v-for="column in columns" :key="column">
+              <input
+                v-if="
+                  editing === user.id && column !== 'role' && column !== 'email'
+                "
+                v-model="form[column]"
+                type="text"
+                class="form-control"
+              />
+              <span v-else>{{ user[column] }}</span>
+            </td>
+            <td>
+              <div v-if="editing === user.id">
+                <button @click="save" class="btn btn-success btn-sm me-1">
+                  Save
+                </button>
+                <button
+                  @click="editing = null"
+                  class="btn btn-secondary btn-sm"
+                >
+                  Cancel
+                </button>
+              </div>
+              <div v-else>
+                <button @click="edit(user)" class="btn btn-primary btn-sm me-1">
+                  Edit
+                </button>
+                <button @click="remove(user)" class="btn btn-danger btn-sm">
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <!-- Data table -->
-    <div class="mt-4"></div>
-    <table class="table table-striped">
-      <thead class="table-success">
-        <tr>
-          <th
-            v-for="column in columns"
-            :key="column"
-            @click="sort(column)"
-            style="cursor: pointer"
-          >
-            {{ column }}
-            <span v-if="sortColumn === column">
-              {{ sortDirection === "asc" ? "↑" : "↓" }}
-            </span>
-          </th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in paginatedUsers" :key="user.id">
-          <td v-for="column in columns" :key="column">
-            <input
-              v-if="
-                editing === user.id && column !== 'role' && column !== 'email'
-              "
-              v-model="form[column]"
-              type="text"
-              class="form-control"
-            />
-            <span v-else>{{ user[column] }}</span>
-          </td>
-          <td>
-            <div v-if="editing === user.id">
-              <button @click="save" class="btn btn-success btn-sm me-1">
-                Save
-              </button>
-              <button @click="editing = null" class="btn btn-secondary btn-sm">
-                Cancel
-              </button>
-            </div>
-            <div v-else>
-              <button @click="edit(user)" class="btn btn-primary btn-sm me-1">
-                Edit
-              </button>
-              <button @click="remove(user)" class="btn btn-danger btn-sm">
-                Delete
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
     <!-- Pagination -->
     <div class="card">
       <Paginator

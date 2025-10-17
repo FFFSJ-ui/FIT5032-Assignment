@@ -49,7 +49,7 @@ const route = useRoute()
 
 .main-container {
   padding-top: 30px;
-  background: #f5f7f2;
+  background-color: #f1f4f1;
   min-height: 100vh;
 }
 

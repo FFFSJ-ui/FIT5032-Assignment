@@ -1,87 +1,99 @@
 <template>
   <div class="container mt-4">
     <h1>Event Management</h1>
-    <!-- Search -->
-    <div class="row g-2">
-      <div class="col-md-2">
-        <select v-model="searchColumn" class="form-select">
-          <option value="title">Title</option>
-          <option value="content">Content</option>
-          <option value="location">Location</option>
-          <option value="time">Time</option>
-          <option value="email">Email</option>
-        </select>
+    <div class="table-responsive">
+      <!-- Search -->
+      <div class="row g-2">
+        <div class="col-md-2">
+          <select v-model="searchColumn" class="form-select">
+            <option value="title">Title</option>
+            <option value="content">Content</option>
+            <option value="location">Location</option>
+            <option value="time">Time</option>
+            <option value="email">Email</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <input
+            v-model="searchValue"
+            type="text"
+            class="form-control"
+            :placeholder="`Search by ${searchColumn}`"
+            @keyup.enter="find"
+          />
+        </div>
+        <div class="col-md-4">
+          <button @click="find" class="btn btn-primary me-1">Search</button>
+          <button @click="clear" class="btn btn-secondary me-1">Clear</button>
+          <ExportData :data="events" :columns="columns" filename="events" />
+        </div>
       </div>
-      <div class="col-md-6">
-        <input
-          v-model="searchValue"
-          type="text"
-          class="form-control"
-          :placeholder="`Search by ${searchColumn}`"
-          @keyup.enter="find"
-        />
-      </div>
-      <div class="col-md-4">
-        <button @click="find" class="btn btn-primary me-1">Search</button>
-        <button @click="clear" class="btn btn-secondary me-1">Clear</button>
-        <ExportData :data="events" :columns="columns" filename="events" />
-      </div>
+      <!-- Data table -->
+      <div class="mt-4"></div>
+      <table class="table table-striped">
+        <thead class="table-success">
+          <tr>
+            <th
+              v-for="column in columns"
+              :key="column"
+              @click="sort(column)"
+              style="cursor: pointer"
+            >
+              {{ column }}
+              <span v-if="sortColumn === column">
+                {{ sortDirection === "asc" ? "↑" : "↓" }}
+              </span>
+            </th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="event in paginatedEvents" :key="event.id">
+            <td v-for="column in columns" :key="column">
+              <input
+                v-if="
+                  editing === event.id &&
+                  column !== 'time' &&
+                  column !== 'email'
+                "
+                v-model="form[column]"
+                type="text"
+                class="form-control"
+              />
+              <span v-else>{{
+                column === "time"
+                  ? formatTimestamp(event[column])
+                  : event[column]
+              }}</span>
+            </td>
+            <td>
+              <div v-if="editing === event.id">
+                <button @click="save" class="btn btn-success btn-sm me-1">
+                  Save
+                </button>
+                <button
+                  @click="editing = null"
+                  class="btn btn-secondary btn-sm"
+                >
+                  Cancel
+                </button>
+              </div>
+              <div v-else>
+                <button
+                  @click="edit(event)"
+                  class="btn btn-primary btn-sm me-1"
+                >
+                  Edit
+                </button>
+                <button @click="remove(event)" class="btn btn-danger btn-sm">
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <!-- Data table -->
-    <div class="mt-4"></div>
-    <table class="table table-striped">
-      <thead class="table-success">
-        <tr>
-          <th
-            v-for="column in columns"
-            :key="column"
-            @click="sort(column)"
-            style="cursor: pointer"
-          >
-            {{ column }}
-            <span v-if="sortColumn === column">
-              {{ sortDirection === "asc" ? "↑" : "↓" }}
-            </span>
-          </th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="event in paginatedEvents" :key="event.id">
-          <td v-for="column in columns" :key="column">
-            <input
-              v-if="
-                editing === event.id && column !== 'time' && column !== 'email'
-              "
-              v-model="form[column]"
-              type="text"
-              class="form-control"
-            />
-            <span v-else>{{
-              column === "time" ? formatTimestamp(event[column]) : event[column]
-            }}</span>
-          </td>
-          <td>
-            <div v-if="editing === event.id">
-              <button @click="save" class="btn btn-success btn-sm me-1">
-                Save
-              </button>
-              <button @click="editing = null" class="btn btn-secondary btn-sm">
-                Cancel
-              </button>
-            </div>
-            <div v-else>
-              <button @click="edit(event)" class="btn btn-primary btn-sm me-1">
-                Edit
-              </button>
-              <button @click="remove(event)" class="btn btn-danger btn-sm">
-                Delete
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
     <!-- Pagination -->
     <div class="card">
       <Paginator
