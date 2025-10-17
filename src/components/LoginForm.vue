@@ -36,6 +36,11 @@
             Clear
           </button>
         </div>
+        <div class="text-center mt-3">
+          <button type="button" class="btn btn-success" @click="googleLogin">
+            Google Login
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -46,8 +51,20 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import db from "@/firebase/init";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { collection, query, where, limit, getDocs } from "firebase/firestore";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
+import {
+  collection,
+  query,
+  where,
+  limit,
+  getDocs,
+  addDoc,
+} from "firebase/firestore";
 import { setCurrentUser } from "@/auth";
 
 // Alt + P to show/hide password
@@ -164,6 +181,54 @@ const validatePassword = (blur) => {
         "Password must contain at least one special character.";
   } else {
     errors.value.password = null;
+  }
+};
+
+const googleLogin = async () => {
+  try {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+
+    try {
+      // Check if the email exists in Firestore
+      const querySnapshot = await getDocs(
+        query(
+          collection(db, "users"),
+          where("email", "==", user.email),
+          limit(1)
+        )
+      );
+      let userData;
+      // Check if the user exists
+      if (!querySnapshot.empty) {
+        userData = querySnapshot.docs[0].data();
+      } else {
+        // Create a new user in Firestore
+        userData = {
+          email: user.email,
+          username: user.displayName || user.email.split("@")[0],
+          password: "Student1@",
+          role: "user",
+          rating: 5,
+        };
+        await addDoc(collection(db, "users"), userData);
+      }
+      setCurrentUser({
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        username: userData.username,
+        role: userData.role,
+      });
+      await router.push("/home");
+    } catch (error) {
+      console.error("Database operation failed:", error);
+      await auth.signOut();
+    }
+  } catch (error) {
+    console.error("Google sign-in error:", error);
   }
 };
 </script>
