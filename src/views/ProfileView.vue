@@ -13,7 +13,6 @@
           <EventForm />
         </div>
       </div>
-      <SendGrid />
     </div>
   </div>
 </template>

@@ -34,9 +34,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="form-container mt-5">
+  <div class="hero-image">
+    <h2 class="hero-text">Your Plate. Your Health. Our Future.</h2>
+  </div>
+  <div class="container mt-5">
     <h1 class="text-center">Event</h1>
-    <div class="mb-3">
+    <div class="events-grid">
       <div
         v-for="event in events"
         :key="event.id"
@@ -44,7 +47,7 @@ onMounted(() => {
         @click="eventDetail(event)"
         @keydown.enter="eventDetail(event)" 
         tabindex="0"       
-        style="cursor: pointer"
+        style="cursor: pointer; height: 150px;"
       >
         <div class="card-body">
           <h5>{{ event.title }}</h5>
@@ -57,11 +60,38 @@ onMounted(() => {
 </template>
 
 <style>
-/* DataTable */
-.p-datatable td {
-  white-space: normal;
-  word-wrap: break-word;
-  word-break: break-word;
-  max-width: 400px;
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 600px);
+  gap: 2rem;
+  justify-content: center;
+}
+
+.hero-image {
+  width: 100vw;
+  height: 30vh;
+  background-image: url("@/assets/home.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform-origin: center;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-text {
+  color: #274754;
+  font-size: 3rem;
+  font-weight: 900;
+  margin: 0;
+  text-align: center;
+  text-shadow:
+    3px 3px 6px rgba(255, 255, 255, 1),
+    -2px -2px 4px rgba(255, 255, 255, 1),
+    0 0 8px rgba(255, 255, 255, 0.9);
 }
 </style>
